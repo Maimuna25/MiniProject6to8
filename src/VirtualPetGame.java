@@ -92,7 +92,7 @@ public class VirtualPetGame {
 
                 int choice = getUserChoice(reader);
 
-                int updatedHealth = simulateRound(choice, getPetRecordHealth(petRecord), getPetRecordHunger(petRecord), getPetRecordHappiness(petRecord), random, petRecord);
+                 simulateRound(choice, getPetRecordHealth(petRecord), getPetRecordHunger(petRecord), getPetRecordHappiness(petRecord), random, petRecord);
             }
 
             System.out.println("Do you want to save and quit the game? (Y/N)");
