@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.Random;
-
+import java.util.List;
+import java.util.ArrayList;
 
 class PetRecord {
     String name;
@@ -12,21 +13,27 @@ class PetRecord {
 
 public class VirtualPetGame {
     public static void main(String[] args) throws IOException {
+
         printIntroMessage();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
 
-             PetRecord[] petRecords;
+             PetRecord[] petRecords = new PetRecord[5];
 
+        System.out.println("Do you want to resume a saved game? (Y/N)");
+        String resumeDecision = reader.readLine();
+        if (resumeDecision.equals("Y")) {
+             petRecords= LoadGameFromFile();
+        } else {
             System.out.println("How many pets would you like to take care of?");
             int numPets = Integer.parseInt(reader.readLine());
 
             petRecords = createPetRecords(reader, numPets);
+        }
 
-            System.out.println("How many rounds would you like to play?");
-            int numRounds = Integer.parseInt(reader.readLine());
-
+        System.out.println("How many rounds would you like to play?");
+        int numRounds = Integer.parseInt(reader.readLine());
 
         playGame(petRecords, numRounds);
 
@@ -34,6 +41,7 @@ public class VirtualPetGame {
 
         determineOutcome(petRecords);
     }
+
     public static void saveGameToFile(PetRecord[] petRecords, int round) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("pet_game_state.txt"));
         writer.write("Round: " + round + "\n");
@@ -43,6 +51,34 @@ public class VirtualPetGame {
         System.out.println("Game state saved successfully!");
         writer.close();
     }
+      public static PetRecord[] LoadGameFromFile() throws IOException
+    {
+         String filename = "pet_game_state.txt";
+            BufferedReader inputStream = new BufferedReader (new FileReader(filename));
+            List<PetRecord> petList = new ArrayList<>();
+
+            String pets = inputStream.readLine();
+            while(pets!=null)
+            {
+                PetRecord pet = new PetRecord();
+                String[] pet_components = pets.split(",");
+
+                pet.name = pet_components[0];
+                pet.hunger = Integer.parseInt(pet_components[1]);
+                pet.health = Integer.parseInt(pet_components[2]);
+                pet.happiness = Integer.parseInt(pet_components[3]);
+                pet.favoriteFood = pet_components[4];
+
+                System.out.println( pet.name + "\t" + pet.hunger + ",\t" + pet.health + ",\t" + pet.happiness + ",\t" + pet.favoriteFood );
+
+                pets = inputStream.readLine();
+            }
+
+            inputStream.close();
+            PetRecord[] petRecords = petList.toArray(new PetRecord[0]);
+
+            return petRecords;
+        }
 
     public static void printIntroMessage() {
         System.out.println("ฅ՞•ﻌ•՞ฅ Ｐｅｔ　Ｐｒｏｇｒａｍ‌ ฅ՞•ﻌ•՞ฅ");
